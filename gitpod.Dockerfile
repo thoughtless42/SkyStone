@@ -42,8 +42,8 @@ RUN cd /opt && \
 # download and install Android SDK
 # https://developer.android.com/studio#command-tools
 ARG ANDROID_SDK_VERSION=6514223
-ARG android_platform = "android-29"
-ARG build_tools = "29.0.3"
+ARG android_platform="android-29"
+ARG build_tools="29.0.3"
 ENV ANDROID_SDK_ROOT /opt/android-sdk
 RUN mkdir -p ${ANDROID_SDK_ROOT}/cmdline-tools && \
     wget -q https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_VERSION}_latest.zip && \
@@ -63,8 +63,9 @@ ENV LD_LIBRARY_PATH ${ANDROID_SDK_ROOT}/emulator/lib64:${ANDROID_SDK_ROOT}/emula
 ENV QTWEBENGINE_DISABLE_SANDBOX 1
 
 # accept the license agreements of the SDK components
-!update-java-alternatives -s java-1.8.0-openjdk-amd64
-!java -version
+
+RUN update-java-alternatives -s java-1.8.0-openjdk-amd64 && \
+    java -version
 
 RUN touch /root/.android/repositories.cfg && \
 	echo "licenses" && \
@@ -72,8 +73,8 @@ RUN touch /root/.android/repositories.cfg && \
 	echo "update" && \
 	${'ANDROID_HOME'}/tools/bin/sdkmanager --update && \ 
 	echo "platforms" && \
-	${'ANDROID_HOME'}/tools/bin/sdkmanager "platforms;{android_platform}" && \
+	${'ANDROID_HOME'}/tools/bin/sdkmanager "platforms;${android_platform}" && \
 	echo "build-tools" && \
-	${'ANDROID_HOME'}/tools/bin/sdkmanager "build-tools;{build_tools}" && \
+	${'ANDROID_HOME'}/tools/bin/sdkmanager "build-tools;${build_tools}" && \
 	echo "platform-tools" && \
 	${'ANDROID_HOME'}/tools/bin/sdkmanager  "platform-tools"
